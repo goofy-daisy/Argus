@@ -1,0 +1,122 @@
+action:
+  clip_frames: 16
+  clip_size: 182
+  device: mps
+  inference_stride: 8
+  labels:
+  - normal
+  - loitering
+  - running
+  - falling
+  - crowd_formation
+  majority_vote_window: 3
+  model_path: argus/models/x3d_s_argus.pth
+  num_classes: 5
+  ucf101_proxy_map:
+    crowd_formation:
+    - BandMarching
+    - MilitaryParade
+    falling:
+    - FloorGymnastics
+    - LongJump
+    loitering:
+    - Knitting
+    - ShavingBeard
+    normal:
+    - TaiChi
+    - WalkingWithDog
+    running:
+    - Basketball
+    - SoccerPenalty
+  video_mean:
+  - 0.45
+  - 0.45
+  - 0.45
+  video_std:
+  - 0.225
+  - 0.225
+  - 0.225
+alerts:
+  composite_weights:
+    action: 0.35
+    anomaly: 0.25
+    detection: 0.4
+  high_threshold: 0.75
+  low_threshold: 0.25
+  medium_threshold: 0.5
+anomaly:
+  device: mps
+  feature_dim: 5
+  features:
+  - x_norm
+  - y_norm
+  - vx
+  - vy
+  - aspect_ratio
+  hidden_size: 64
+  model_path: argus/models/lstm_autoencoder.pth
+  mot17_sequences:
+  - MOT17-02-FRCNN
+  - MOT17-04-FRCNN
+  - MOT17-05-FRCNN
+  - MOT17-09-FRCNN
+  - MOT17-10-FRCNN
+  - MOT17-11-FRCNN
+  - MOT17-13-FRCNN
+  num_layers: 2
+  sequence_length: 30
+  threshold: 0.05
+  trajectory_data_dir: argus/data/trajectories
+cameras: []
+database:
+  max_overflow: 20
+  pool_size: 10
+  url: postgresql://localhost:5432/argus
+detection:
+  confidence_threshold: 0.25
+  device: mps
+  imgsz: 640
+  input_size:
+  - 640
+  - 640
+  model_path: argus/models/yolov8m.pt
+  nms_iou_threshold: 0.5
+  person_class_index: 0
+fusion:
+  calibration_max_images: 200
+  device: mps
+  ece_n_bins: 15
+  feature_channels: 32
+  flir_rgb_train: argus/data/FLIR_ADAS/FLIR_ADAS_v2/images_rgb_train
+  flir_rgb_val: argus/data/FLIR_ADAS/FLIR_ADAS_v2/images_rgb_val
+  flir_thermal_train: argus/data/FLIR_ADAS/FLIR_ADAS_v2/images_thermal_train
+  flir_thermal_val: argus/data/FLIR_ADAS/FLIR_ADAS_v2/images_thermal_val
+  model_path: argus/models/attention_fusion.pth
+  rgb_channels: 3
+  thermal_channels: 1
+mlflow:
+  experiment_name: argus
+  tracking_uri: ./mlruns
+reid:
+  device: mps
+  embedding_dim: 512
+  imagenet_mean:
+  - 0.485
+  - 0.456
+  - 0.406
+  imagenet_std:
+  - 0.229
+  - 0.224
+  - 0.225
+  input_height: 256
+  input_width: 128
+  model_name: osnet_ain_x1_0
+  model_path: argus/models/osnet_ain_x1_0_market1501.pth
+  num_train_pids: 751
+  similarity_threshold: 0.65
+tracking:
+  match_thresh: 0.8
+  new_track_thresh: 0.25
+  track_buffer: 30
+  track_low_thresh: 0.1
+  track_thresh: 0.5

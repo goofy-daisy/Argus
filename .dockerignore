@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.git/
+argus/data/
+argus/models/
+argus-frontend/node_modules/
+mlruns/
+*.pth
+.env

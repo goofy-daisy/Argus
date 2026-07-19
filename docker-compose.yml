@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  argus-db:
+    image: postgres:15
+    container_name: argus-db
+    environment:
+      POSTGRES_DB: argus
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5433:5432"
+    volumes:
+      - argus-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d argus"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  argus-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: argus-api
+    depends_on:
+      argus-db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./argus:/app/argus
+      - ./argus/models:/app/models
+      - ./argus/data:/app/data
+      - ./config.yaml:/app/config.yaml
+    environment:
+      DATABASE_URL: "postgresql://postgres@argus-db:5432/argus"
+      MLFLOW_TRACKING_URI: "http://argus-mlflow:5000"
+
+  argus-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: argus-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      CI: "false"
+      BROWSER: "none"
+      CHOKIDAR_USEPOLLING: "true"
+      WATCHPACK_POLLING: "true"
+    volumes:
+      - ./argus-frontend/src:/app/src
+
+  argus-mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    container_name: argus-mlflow
+    depends_on:
+      argus-db:
+        condition: service_healthy
+    ports:
+      - "5001:5000"
+    volumes:
+      - argus-mlflow-artifacts:/mlflow/artifacts
+
+volumes:
+  argus-db-data:
+  argus-mlflow-artifacts:

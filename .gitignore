@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Models (large binaries — use DVC or download scripts instead)
+argus/models/*.pt
+argus/models/*.pth
+argus/models/*.onnx
+
+# Model training artifact subdirectories
+argus/models/action_training/
+argus/models/anomaly_training/
+argus/models/fusion_training/
+argus/models/reid_training/
+
+# Training run artifacts (YOLO, reid checkpoints, MLflow copies)
+runs/
+
+# Data
+argus/data/
+*.csv
+*.json
+!package*.json
+!tsconfig*.json
+
+# MLflow
+mlruns/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Node / React
+argus-frontend/node_modules/
+argus-frontend/build/
+argus-frontend/.env.local
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# JetBrains
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Alembic
+alembic/versions/*.pyc
+
+# Logs
+*.log
+logs/
+
+# Personal notes
+cmds.txt
